@@ -105,10 +105,6 @@ The app connects to these backend endpoints:
 4. Test everything works
 5. Submit a pull request
 
-## License
-
-MIT License - feel free to use this project for learning or your own applications.
-
 ---
 
-Need help? Create an issue or contact [your.email@example.com]
+Need help? Create an issue or contact yhmpth@gmail.com
