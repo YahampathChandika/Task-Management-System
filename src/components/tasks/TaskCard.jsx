@@ -41,18 +41,12 @@ const getStatusConfig = (status) => {
         icon: "🔄",
         gradient: "from-blue-500 to-blue-600",
       };
-    case "COMPLETED":
+    case "DONE": 
       return {
         color:
           "bg-green-100 text-green-800 dark:bg-green-800/50 dark:text-green-300",
         icon: "✅",
         gradient: "from-green-500 to-green-600",
-      };
-    case "BLOCKED":
-      return {
-        color: "bg-red-100 text-red-800 dark:bg-red-800/50 dark:text-red-300",
-        icon: "🚫",
-        gradient: "from-red-500 to-red-600",
       };
     default:
       return {
@@ -82,14 +76,13 @@ const isOverdue = (dateString) => {
   return dueDate < today;
 };
 
-
 export default function TaskCard({ task }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
 
   const statusConfig = getStatusConfig(task.status);
-  const overdue = isOverdue(task.duedate);
+  const overdue = isOverdue(task.dueDate);
 
   return (
     <>

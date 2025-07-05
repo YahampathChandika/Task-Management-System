@@ -33,7 +33,7 @@ export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
         title: task.title || "",
         description: task.description || "",
         status: task.status || "TODO",
-        duedate: task.duedate ? task.duedate.split("T")[0] : "",
+        duedate: task.dueDate ? task.dueDate.split("T")[0] : "",
         employeeId: task.employeeId || 0,
       });
     }

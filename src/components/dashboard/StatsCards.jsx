@@ -19,20 +19,24 @@ export default function StatsCards({ employees = [], tasks = [] }) {
     return acc;
   }, {});
 
-  const completedTasks = tasksByStatus.COMPLETED || 0;
+  // Fix: Use correct status values from your API
+  const completedTasks = tasksByStatus.DONE || tasksByStatus.COMPLETED || 0;
   const inProgressTasks =
     tasksByStatus.IN_PROGRESS || tasksByStatus.INPROGRESS || 0;
+  const todoTasks = tasksByStatus.TODO || 0;
 
-  // Calculate overdue tasks
+  // Fix: Calculate overdue tasks with correct field name and status
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const overdueTasks = tasks.filter((task) => {
-    if (!task.duedate) return false;
-    const dueDate = new Date(task.duedate);
-    return dueDate < today && task.status?.toUpperCase() !== "COMPLETED";
+    // Fix: Use dueDate (from your API) and check for DONE status
+    if (!task.dueDate) return false;
+    const dueDate = new Date(task.dueDate);
+    const status = task.status?.toUpperCase();
+    return dueDate < today && status !== "DONE" && status !== "COMPLETED";
   }).length;
 
-  // Calculate completion rate
+  // Calculate completion rate using the correct completed count
   const completionRate =
     totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
@@ -72,7 +76,7 @@ export default function StatsCards({ employees = [], tasks = [] }) {
       bgGradient:
         "from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/20",
       textColor: "text-red-600 dark:text-red-400",
-    }
+    },
   ];
 
   return (

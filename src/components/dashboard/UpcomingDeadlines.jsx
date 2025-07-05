@@ -50,7 +50,7 @@ export default function UpcomingDeadlines({ tasks = [] }) {
 
   const upcomingTasks = tasks
     .filter(
-      (task) => task.duedate && task.status?.toUpperCase() !== "COMPLETED"
+      (task) => task.dueDate && task.status?.toUpperCase() !== "COMPLETED"
     )
     .sort((a, b) => new Date(a.duedate) - new Date(b.duedate))
     .slice(0, 5);
@@ -87,7 +87,7 @@ export default function UpcomingDeadlines({ tasks = [] }) {
         ) : (
           <div className="space-y-3">
             {upcomingTasks.map((task) => {
-              const dateInfo = formatDate(task.duedate);
+              const dateInfo = formatDate(task.dueDate);
               return (
                 <div
                   key={task.id}
@@ -107,7 +107,7 @@ export default function UpcomingDeadlines({ tasks = [] }) {
                         <div className="flex items-center text-muted-foreground">
                           <Calendar className="h-3 w-3 mr-1" />
                           <span>
-                            {new Date(task.duedate).toLocaleDateString()}
+                            {new Date(task.dueDate).toLocaleDateString()}
                           </span>
                         </div>
                         {task.employee && (

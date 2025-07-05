@@ -14,8 +14,6 @@ const getStatusColor = (status) => {
       return "bg-blue-100 text-blue-800 dark:bg-blue-800/50 dark:text-blue-300";
     case "COMPLETED":
       return "bg-green-100 text-green-800 dark:bg-green-800/50 dark:text-green-300";
-    case "BLOCKED":
-      return "bg-red-100 text-red-800 dark:bg-red-800/50 dark:text-red-300";
     default:
       return "bg-slate-100 text-slate-800 dark:bg-slate-800/50 dark:text-slate-300";
   }
@@ -92,10 +90,10 @@ export default function RecentTasks({ tasks = [] }) {
                       >
                         {task.status || "TODO"}
                       </Badge>
-                      {task.duedate && (
+                      {task.dueDate && (
                         <div className="flex items-center text-muted-foreground">
                           <Calendar className="mr-1 h-3 w-3" />
-                          {formatDate(task.duedate)}
+                          {formatDate(task.dueDate)}
                         </div>
                       )}
                       {task.employee && (

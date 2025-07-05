@@ -63,7 +63,7 @@ export default function QuickActions() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           {actions.map((action, index) => {
             const Icon = action.icon;
             return (

@@ -92,7 +92,7 @@ export default function EmployeeWorkload({ employees = [], tasks = [] }) {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3 flex-shrink-0">
+                  <div className="flex items-center space-x-3 md:space-x-6 flex-shrink-0">
                     <div className="text-right hidden sm:block">
                       <p className="text-sm font-medium text-foreground">
                         {employee.activeTasks} active

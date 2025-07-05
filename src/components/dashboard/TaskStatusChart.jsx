@@ -27,18 +27,11 @@ export default function TaskStatusChart({ tasks = [] }) {
     },
     {
       name: "Completed",
-      value: tasksByStatus.COMPLETED || 0,
+      value: tasksByStatus.DONE || 0,
       color: "bg-green-500 dark:bg-green-400",
       bgColor: "bg-green-100 dark:bg-green-800/50",
       textColor: "text-green-700 dark:text-green-300",
-    },
-    {
-      name: "Blocked",
-      value: tasksByStatus.BLOCKED || 0,
-      color: "bg-red-500 dark:bg-red-400",
-      bgColor: "bg-red-100 dark:bg-red-800/50",
-      textColor: "text-red-700 dark:text-red-300",
-    },
+    }
   ];
 
   const totalTasks = tasks.length;

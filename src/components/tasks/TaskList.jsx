@@ -14,15 +14,23 @@ export default function TaskList({ filter = "all", searchTerm = "" }) {
     if (filter === "assigned") passesFilter = task.employeeId > 0;
     else if (filter === "unassigned") passesFilter = task.employeeId === 0;
     else if (filter === "overdue") {
-      const dueDate = new Date(task.duedate);
+      const dueDate = new Date(task.dueDate); // Fix: Use dueDate not duedate
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       passesFilter =
-        task.duedate &&
+        task.dueDate &&
         dueDate < today &&
+        task.status?.toUpperCase() !== "DONE" &&
         task.status?.toUpperCase() !== "COMPLETED";
     } else if (filter !== "all") {
-      passesFilter = task.status?.toUpperCase() === filter.toUpperCase();
+      // Handle both DONE and COMPLETED for completed filter
+      if (filter.toUpperCase() === "COMPLETED") {
+        passesFilter =
+          task.status?.toUpperCase() === "DONE" ||
+          task.status?.toUpperCase() === "COMPLETED";
+      } else {
+        passesFilter = task.status?.toUpperCase() === filter.toUpperCase();
+      }
     }
 
     if (!passesFilter) return false;
