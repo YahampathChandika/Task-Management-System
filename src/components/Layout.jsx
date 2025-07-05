@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../store/authSlice";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
+import SignOutDialog from "./SignOutDialog";
 import {
   Menu,
   X,
@@ -22,6 +23,7 @@ import {
 
 export default function Layout({ children }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,14 +35,19 @@ export default function Layout({ children }) {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = () => {
+  const handleSignOutClick = () => {
+    setIsSignOutDialogOpen(true);
+  };
+
+  const handleConfirmSignOut = () => {
     dispatch(logout());
     navigate("/login");
     setIsMobileMenuOpen(false);
+    setIsSignOutDialogOpen(false);
   };
 
   const isActiveRoute = (path) => {
@@ -55,42 +62,47 @@ export default function Layout({ children }) {
   };
 
   const navigationItems = [
-    { 
-      path: "/", 
-      label: "Dashboard", 
+    {
+      path: "/",
+      label: "Dashboard",
       icon: Home,
       gradient: "from-blue-500 to-blue-600",
-      description: "Overview and analytics"
+      description: "Overview and analytics",
     },
-    { 
-      path: "/employees", 
-      label: "Team", 
+    {
+      path: "/employees",
+      label: "Team",
       icon: Users,
       gradient: "from-green-500 to-green-600",
-      description: "Manage your team members"
+      description: "Manage your team members",
     },
-    { 
-      path: "/tasks", 
-      label: "Tasks", 
+    {
+      path: "/tasks",
+      label: "Tasks",
       icon: CheckSquare,
       gradient: "from-purple-500 to-purple-600",
-      description: "Project tasks and workflow"
+      description: "Project tasks and workflow",
     },
   ];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Enhanced Top Navbar */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg' 
-          : 'bg-background/80 backdrop-blur-sm border-b border-border/30'
-      }`}>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-background/95 backdrop-blur-xl border-b border-border/50 shadow-lg"
+            : "bg-background/80 backdrop-blur-sm border-b border-border/30"
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             {/* Enhanced Logo Section */}
             <div className="flex items-center">
-              <div className="flex items-center space-x-3 group cursor-pointer" onClick={() => navigate('/')}>
+              <div
+                className="flex items-center space-x-3 group cursor-pointer"
+                onClick={() => navigate("/")}
+              >
                 <div className="relative">
                   <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-primary to-primary/80 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
                     <Briefcase className="h-5 w-5 text-primary-foreground" />
@@ -120,9 +132,9 @@ export default function Layout({ children }) {
                       variant={isActive ? "default" : "ghost"}
                       onClick={() => navigate(item.path)}
                       className={`relative text-sm font-medium px-4 py-2 rounded-xl transition-all duration-200 ${
-                        isActive 
-                          ? 'bg-gradient-to-r from-primary to-primary/90 text-primary-foreground shadow-lg hover:shadow-xl' 
-                          : 'hover:bg-accent/80 hover:scale-105'
+                        isActive
+                          ? "bg-gradient-to-r from-primary to-primary/90 text-primary-foreground shadow-lg hover:shadow-xl"
+                          : "hover:bg-accent/80 hover:scale-105"
                       }`}
                     >
                       <IconComponent className="h-4 w-4 mr-2" />
@@ -146,7 +158,7 @@ export default function Layout({ children }) {
                     <div className="w-px h-6 bg-border/50" />
                     <Button
                       variant="outline"
-                      onClick={handleLogout}
+                      onClick={handleSignOutClick}
                       className="text-sm font-medium px-4 py-2 rounded-xl border-border/50 hover:border-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-all duration-200 hover:scale-105"
                     >
                       <LogOut className="h-4 w-4 mr-2" />
@@ -233,27 +245,33 @@ export default function Layout({ children }) {
                           variant={isActive ? "default" : "ghost"}
                           onClick={() => navigateAndClose(item.path)}
                           className={`w-full justify-start text-lg py-6 px-5 rounded-2xl h-auto group transition-all duration-200 ${
-                            isActive 
-                              ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg hover:shadow-xl` 
-                              : 'hover:bg-accent/80 hover:scale-[1.02]'
+                            isActive
+                              ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg hover:shadow-xl`
+                              : "hover:bg-accent/80 hover:scale-[1.02]"
                           }`}
                         >
-                          <div className={`p-2 rounded-xl mr-4 transition-all duration-200 ${
-                            isActive 
-                              ? 'bg-white/20' 
-                              : `bg-gradient-to-r ${item.gradient} opacity-80 group-hover:opacity-100`
-                          }`}>
-                            <IconComponent className={`h-5 w-5 ${
-                              isActive ? 'text-white' : 'text-white'
-                            }`} />
+                          <div
+                            className={`p-2 rounded-xl mr-4 transition-all duration-200 ${
+                              isActive
+                                ? "bg-white/20"
+                                : `bg-gradient-to-r ${item.gradient} opacity-80 group-hover:opacity-100`
+                            }`}
+                          >
+                            <IconComponent
+                              className={`h-5 w-5 ${
+                                isActive ? "text-white" : "text-white"
+                              }`}
+                            />
                           </div>
                           <div className="flex-1 text-left">
                             <div className="font-semibold">{item.label}</div>
-                            <div className={`text-xs ${
-                              isActive 
-                                ? 'text-white/80' 
-                                : 'text-muted-foreground group-hover:text-foreground'
-                            }`}>
+                            <div
+                              className={`text-xs ${
+                                isActive
+                                  ? "text-white/80"
+                                  : "text-muted-foreground group-hover:text-foreground"
+                              }`}
+                            >
                               {item.description}
                             </div>
                           </div>
@@ -290,10 +308,10 @@ export default function Layout({ children }) {
                 <ModeToggle />
               </div>
 
-              {/* Enhanced Logout Button */}
+              {/* Enhanced Logout Button with Confirmation */}
               <Button
                 variant="outline"
-                onClick={handleLogout}
+                onClick={handleSignOutClick}
                 className="w-full justify-start text-lg py-6 px-5 rounded-2xl h-auto border-red-200 dark:border-red-800/50 bg-gradient-to-r from-red-50 to-red-100/50 dark:from-red-950/20 dark:to-red-900/20 text-red-600 dark:text-red-400 hover:from-red-100 hover:to-red-200 dark:hover:from-red-950/40 dark:hover:to-red-900/40 transition-all duration-200 hover:scale-[1.02] group"
               >
                 <div className="p-2 rounded-xl mr-4 bg-gradient-to-r from-red-500 to-red-600 text-white group-hover:scale-110 transition-transform duration-200">
@@ -311,8 +329,15 @@ export default function Layout({ children }) {
         </div>
       )}
 
+      {/* Sign Out Confirmation Dialog */}
+      <SignOutDialog
+        open={isSignOutDialogOpen}
+        onOpenChange={setIsSignOutDialogOpen}
+        onConfirm={handleConfirmSignOut}
+      />
+
       {/* Main Content with proper spacing */}
-      <main className="pt-16"> {/* Added top padding to account for fixed navbar */}
+      <main className="pt-16">
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">{children}</div>
         </div>
