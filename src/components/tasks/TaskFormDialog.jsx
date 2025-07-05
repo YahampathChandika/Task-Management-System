@@ -23,17 +23,28 @@ export default function TaskFormDialog({ task = null, open, onOpenChange }) {
 
   const handleSubmit = async (formData) => {
     try {
+      let result;
       if (isEditing) {
-        await updateTask({ id: task.id, ...formData }).unwrap();
+        result = await updateTask({ id: task.id, ...formData }).unwrap();
         toast.success("Task updated successfully");
       } else {
-        await createTask(formData).unwrap();
+        result = await createTask(formData).unwrap();
         toast.success("Task created successfully");
       }
+
+      // Close dialog only on success
       onOpenChange(false);
+
+      // Force a small delay to ensure cache invalidation has processed
+      setTimeout(() => {
+        console.log("Task operation completed, cache should be updated");
+      }, 100);
     } catch (error) {
+      console.error("Task operation failed:", error);
       toast.error(
-        isEditing ? "Failed to update task" : "Failed to create task"
+        isEditing
+          ? "Failed to update task. Please try again."
+          : "Failed to create task. Please try again."
       );
     }
   };

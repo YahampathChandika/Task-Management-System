@@ -5,9 +5,16 @@ export const employeesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getEmployees: builder.query({
       query: () => "/employees",
-      providesTags: ["Employee"],
+      providesTags: (result) => {
+        // Provide tags for the list and individual items
+        return result
+          ? [
+              ...result.map(({ id }) => ({ type: "Employee", id })),
+              { type: "Employee", id: "LIST" },
+            ]
+          : [{ type: "Employee", id: "LIST" }];
+      },
       transformResponse: (response) => {
-        // Handle the API response structure { error: boolean, payload: data }
         return response.error ? [] : response.payload;
       },
     }),
@@ -24,7 +31,10 @@ export const employeesApi = apiSlice.injectEndpoints({
         method: "POST",
         body: newEmployee,
       }),
-      invalidatesTags: ["Employee"],
+      invalidatesTags: [
+        { type: "Employee", id: "LIST" },
+        { type: "Task", id: "LIST" }, // Invalidate tasks too since they contain employee info
+      ],
       transformResponse: (response) => {
         return response.error ? null : response.payload;
       },
@@ -35,7 +45,11 @@ export const employeesApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: patch,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "Employee", id }],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Employee", id },
+        { type: "Employee", id: "LIST" },
+        { type: "Task", id: "LIST" }, // Important: Invalidate tasks since tasks display employee info
+      ],
       transformResponse: (response) => {
         return response.error ? null : response.payload;
       },
@@ -45,7 +59,11 @@ export const employeesApi = apiSlice.injectEndpoints({
         url: `/employees/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Employee"],
+      invalidatesTags: (result, error, id) => [
+        { type: "Employee", id },
+        { type: "Employee", id: "LIST" },
+        { type: "Task", id: "LIST" }, // Invalidate tasks too
+      ],
     }),
   }),
 });

@@ -5,7 +5,15 @@ export const tasksApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getTasks: builder.query({
       query: () => "/tasks",
-      providesTags: ["Task"],
+      providesTags: (result) => {
+        // Provide tags for the list and individual items
+        return result
+          ? [
+              ...result.map(({ id }) => ({ type: "Task", id })),
+              { type: "Task", id: "LIST" },
+            ]
+          : [{ type: "Task", id: "LIST" }];
+      },
       transformResponse: (response) => {
         return response.error ? [] : response.payload;
       },
@@ -23,7 +31,10 @@ export const tasksApi = apiSlice.injectEndpoints({
         method: "POST",
         body: newTask,
       }),
-      invalidatesTags: ["Task"],
+      invalidatesTags: [
+        { type: "Task", id: "LIST" },
+        { type: "Employee", id: "LIST" }, // Invalidate employees if task assignment affects workload
+      ],
       transformResponse: (response) => {
         return response.error ? null : response.payload;
       },
@@ -34,7 +45,11 @@ export const tasksApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: patch,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "Task", id }],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Task", id },
+        { type: "Task", id: "LIST" }, // Always invalidate the list
+        { type: "Employee", id: "LIST" }, // Invalidate employees since workload might change
+      ],
       transformResponse: (response) => {
         return response.error ? null : response.payload;
       },
@@ -44,7 +59,11 @@ export const tasksApi = apiSlice.injectEndpoints({
         url: `/tasks/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Task"],
+      invalidatesTags: (result, error, id) => [
+        { type: "Task", id },
+        { type: "Task", id: "LIST" },
+        { type: "Employee", id: "LIST" }, // Invalidate employees since workload changes
+      ],
     }),
     assignTask: builder.mutation({
       query: ({ id, employeeId }) => ({
@@ -52,7 +71,11 @@ export const tasksApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: { employeeId },
       }),
-      invalidatesTags: ["Task", "Employee"],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Task", id },
+        { type: "Task", id: "LIST" }, // Invalidate task list to show assignment changes
+        { type: "Employee", id: "LIST" }, // Invalidate employees to update workload
+      ],
       transformResponse: (response) => {
         return response.error ? null : response.payload;
       },

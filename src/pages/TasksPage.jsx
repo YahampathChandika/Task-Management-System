@@ -91,7 +91,7 @@ export default function TasksPage() {
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-2">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[180px] h-12 border-border/50 focus:border-primary bg-background shadow-sm">
+                <SelectTrigger className="w-full  w-[180px] h-12 border-border/50 focus:border-primary bg-background shadow-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

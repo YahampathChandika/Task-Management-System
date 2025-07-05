@@ -52,8 +52,12 @@ export default function TaskAssignDialog({ task, open, onOpenChange }) {
       toast.success("Task assigned successfully");
       onOpenChange(false);
       setSelectedEmployeeId("");
+
+      // Log for debugging
+      console.log("Task assignment completed, cache should be updated");
     } catch (error) {
-      toast.error("Failed to assign task");
+      console.error("Task assignment failed:", error);
+      toast.error("Failed to assign task. Please try again.");
     }
   };
 
@@ -65,8 +69,12 @@ export default function TaskAssignDialog({ task, open, onOpenChange }) {
       }).unwrap();
       toast.success("Task unassigned successfully");
       onOpenChange(false);
+
+      // Log for debugging
+      console.log("Task unassignment completed, cache should be updated");
     } catch (error) {
-      toast.error("Failed to unassign task");
+      console.error("Task unassignment failed:", error);
+      toast.error("Failed to unassign task. Please try again.");
     }
   };
 
@@ -122,7 +130,7 @@ export default function TaskAssignDialog({ task, open, onOpenChange }) {
               onValueChange={setSelectedEmployeeId}
               disabled={isLoadingEmployees}
             >
-              <SelectTrigger className="h-11 border-border/50 focus:border-primary bg-background">
+              <SelectTrigger className="w-full  h-11 border-border/50 focus:border-primary bg-background">
                 <SelectValue
                   placeholder={
                     isLoadingEmployees

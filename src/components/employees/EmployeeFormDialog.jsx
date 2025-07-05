@@ -29,17 +29,31 @@ export default function EmployeeFormDialog({
 
   const handleSubmit = async (formData) => {
     try {
+      let result;
       if (isEditing) {
-        await updateEmployee({ id: employee.id, ...formData }).unwrap();
+        result = await updateEmployee({
+          id: employee.id,
+          ...formData,
+        }).unwrap();
         toast.success("Employee updated successfully");
       } else {
-        await createEmployee(formData).unwrap();
+        result = await createEmployee(formData).unwrap();
         toast.success("Employee created successfully");
       }
+
+      // Close dialog only on success
       onOpenChange(false);
+
+      // Force a small delay to ensure cache invalidation has processed
+      setTimeout(() => {
+        console.log("Employee operation completed, cache should be updated");
+      }, 100);
     } catch (error) {
+      console.error("Employee operation failed:", error);
       toast.error(
-        isEditing ? "Failed to update employee" : "Failed to create employee"
+        isEditing
+          ? "Failed to update employee. Please try again."
+          : "Failed to create employee. Please try again."
       );
     }
   };

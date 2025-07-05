@@ -15,8 +15,7 @@ import {
 const statusOptions = [
   { value: "TODO", label: "To Do", icon: "⏳" },
   { value: "IN_PROGRESS", label: "In Progress", icon: "🔄" },
-  { value: "COMPLETED", label: "Completed", icon: "✅" },
-  { value: "BLOCKED", label: "Blocked", icon: "🚫" },
+  { value: "DONE", label: "Completed", icon: "✅" },
 ];
 
 export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
@@ -103,7 +102,7 @@ export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
             value={formData.status}
             onValueChange={(value) => handleChange("status", value)}
           >
-            <SelectTrigger className="h-11 border-border/50 focus:border-primary bg-background">
+            <SelectTrigger className="w-full  h-11 border-border/50 focus:border-primary bg-background">
               <SelectValue placeholder="Select task status" />
             </SelectTrigger>
             <SelectContent>
