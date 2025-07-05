@@ -5,9 +5,10 @@ import { store } from "./store";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
+import EmployeesPage from "./pages/EmployeesPage";
 import { Toaster } from "./components/ui/sonner";
 
-// Placeholder components - you'll create these later
+// Temporary placeholder components for pages not yet implemented
 function DashboardPage() {
   return (
     <div className="text-center py-20">
@@ -15,15 +16,6 @@ function DashboardPage() {
       <p className="text-gray-600 mt-2">
         Welcome to your task management system!
       </p>
-    </div>
-  );
-}
-
-function EmployeesPage() {
-  return (
-    <div className="text-center py-20">
-      <h2 className="text-2xl font-bold">Employees</h2>
-      <p className="text-gray-600 mt-2">Employee management coming soon...</p>
     </div>
   );
 }
