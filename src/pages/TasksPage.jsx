@@ -2,7 +2,19 @@
 import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Plus, Search, Filter, X, CheckSquare } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Filter,
+  X,
+  CheckSquare,
+  CircleDot,
+  RotateCw,
+  CheckCircle,
+  User,
+  UserX,
+  AlertTriangle,
+} from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -14,13 +26,13 @@ import TaskList from "../components/tasks/TaskList";
 import TaskFormDialog from "../components/tasks/TaskFormDialog";
 
 const filterOptions = [
-  { value: "all", label: "All Tasks", icon: "📋" },
-  { value: "todo", label: "To Do", icon: "⏳" },
-  { value: "in_progress", label: "In Progress", icon: "🔄" },
-  { value: "completed", label: "Completed", icon: "✅" },
-  { value: "assigned", label: "Assigned", icon: "👤" },
-  { value: "unassigned", label: "Unassigned", icon: "👤" },
-  { value: "overdue", label: "Overdue", icon: "⚠️" },
+  { value: "all", label: "All Tasks", icon: CircleDot },
+  { value: "todo", label: "To Do", icon: CircleDot },
+  { value: "in_progress", label: "In Progress", icon: RotateCw },
+  { value: "completed", label: "Completed", icon: CheckCircle },
+  { value: "assigned", label: "Assigned", icon: User },
+  { value: "unassigned", label: "Unassigned", icon: UserX },
+  { value: "overdue", label: "Overdue", icon: AlertTriangle },
 ];
 
 export default function TasksPage() {
@@ -88,21 +100,24 @@ export default function TasksPage() {
             )}
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-between space-x-3">
             <div className="flex items-center space-x-2">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full  w-[180px] h-12 border-border/50 focus:border-primary bg-background shadow-sm">
+                <SelectTrigger className="w-[250px] !h-12 border-border/50 focus:border-primary bg-background shadow-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {filterOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      <div className="flex items-center space-x-2">
-                        <span>{option.icon}</span>
-                        <span>{option.label}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
+                  {filterOptions.map((option) => {
+                    const IconComponent = option.icon;
+                    return (
+                      <SelectItem key={option.value} value={option.value}>
+                        <div className="flex items-center space-x-2">
+                          <IconComponent className="h-4 w-4" />
+                          <span>{option.label}</span>
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>

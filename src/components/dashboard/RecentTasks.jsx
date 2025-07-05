@@ -2,7 +2,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Calendar, User, ArrowRight, Clock } from "lucide-react";
+import {
+  Calendar,
+  User,
+  ArrowRight,
+  Clock,
+  CircleDot,
+  RotateCw,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGetEmployeesQuery } from "../../store/employeesApi";
 
@@ -14,9 +23,29 @@ const getStatusColor = (status) => {
     case "INPROGRESS":
       return "bg-blue-100 text-blue-800 dark:bg-blue-800/50 dark:text-blue-300";
     case "DONE":
+    case "COMPLETED":
       return "bg-green-100 text-green-800 dark:bg-green-800/50 dark:text-green-300";
+    case "BLOCKED":
+      return "bg-red-100 text-red-800 dark:bg-red-800/50 dark:text-red-300";
     default:
       return "bg-slate-100 text-slate-800 dark:bg-slate-800/50 dark:text-slate-300";
+  }
+};
+
+const getStatusIcon = (status) => {
+  switch (status?.toUpperCase()) {
+    case "TODO":
+      return CircleDot;
+    case "IN_PROGRESS":
+    case "INPROGRESS":
+      return RotateCw;
+    case "DONE":
+    case "COMPLETED":
+      return CheckCircle;
+    case "BLOCKED":
+      return XCircle;
+    default:
+      return CircleDot;
   }
 };
 
@@ -79,6 +108,7 @@ export default function RecentTasks({ tasks = [] }) {
               const assignedEmployee = employees.find(
                 (emp) => emp.id === task.employeeId
               );
+              const StatusIcon = getStatusIcon(task.status);
 
               return (
                 <div
@@ -93,9 +123,12 @@ export default function RecentTasks({ tasks = [] }) {
                       </h4>
                       <div className="flex flex-wrap items-center gap-3 text-xs">
                         <Badge
-                          className={getStatusColor(task.status)}
+                          className={`${getStatusColor(
+                            task.status
+                          )} flex items-center gap-1.5`}
                           variant="secondary"
                         >
+                          <StatusIcon className="h-3 w-3" />
                           {task.status || "TODO"}
                         </Badge>
                         {task.dueDate && (

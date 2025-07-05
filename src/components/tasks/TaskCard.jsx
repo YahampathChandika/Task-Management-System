@@ -12,6 +12,10 @@ import {
   UserPlus,
   Clock,
   AlertCircle,
+  CircleDot, // For TODO
+  RotateCw, // For IN_PROGRESS
+  CheckCircle, // For DONE/COMPLETED
+  XCircle, // For BLOCKED
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -30,7 +34,7 @@ const getStatusConfig = (status) => {
       return {
         color:
           "bg-slate-100 text-slate-800 dark:bg-slate-800/50 dark:text-slate-300",
-        icon: "⏳",
+        icon: CircleDot,
         gradient: "from-slate-500 to-slate-600",
       };
     case "IN_PROGRESS":
@@ -38,7 +42,7 @@ const getStatusConfig = (status) => {
       return {
         color:
           "bg-blue-100 text-blue-800 dark:bg-blue-800/50 dark:text-blue-300",
-        icon: "🔄",
+        icon: RotateCw,
         gradient: "from-blue-500 to-blue-600",
       };
     case "DONE":
@@ -46,20 +50,14 @@ const getStatusConfig = (status) => {
       return {
         color:
           "bg-green-100 text-green-800 dark:bg-green-800/50 dark:text-green-300",
-        icon: "✅",
+        icon: CheckCircle,
         gradient: "from-green-500 to-green-600",
-      };
-    case "BLOCKED":
-      return {
-        color: "bg-red-100 text-red-800 dark:bg-red-800/50 dark:text-red-300",
-        icon: "🚫",
-        gradient: "from-red-500 to-red-600",
       };
     default:
       return {
         color:
           "bg-slate-100 text-slate-800 dark:bg-slate-800/50 dark:text-slate-300",
-        icon: "⏳",
+        icon: CircleDot,
         gradient: "from-slate-500 to-slate-600",
       };
   }
@@ -106,7 +104,8 @@ export default function TaskCard({ task }) {
   const assignedEmployee = employees.find((emp) => emp.id === task.employeeId);
 
   const statusConfig = getStatusConfig(task.status);
-  const overdue = isOverdue(task.dueDate); // Fixed: use dueDate from API
+  const StatusIcon = statusConfig.icon;
+  const overdue = isOverdue(task.dueDate);
 
   return (
     <>
@@ -121,16 +120,16 @@ export default function TaskCard({ task }) {
                 </h3>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge
-                    className={`${statusConfig.color} border-0 font-medium text-xs px-3 py-1`}
+                    className={`${statusConfig.color} border-0 font-medium text-xs px-3 py-1 flex items-center gap-1.5`}
                   >
-                    <span className="mr-1">{statusConfig.icon}</span>
+                    <StatusIcon className="h-3 w-3" />
                     {task.status || "TODO"}
                   </Badge>
                   {overdue &&
                     task.status?.toUpperCase() !== "DONE" &&
                     task.status?.toUpperCase() !== "COMPLETED" && (
-                      <Badge className="bg-red-100 text-red-800 dark:bg-red-800/50 dark:text-red-300 border-0 font-medium text-xs px-3 py-1">
-                        <AlertCircle className="mr-1 h-3 w-3" />
+                      <Badge className="bg-red-100 text-red-800 dark:bg-red-800/50 dark:text-red-300 border-0 font-medium text-xs px-3 py-1 flex items-center gap-1.5">
+                        <AlertCircle className="h-3 w-3" />
                         Overdue
                       </Badge>
                     )}

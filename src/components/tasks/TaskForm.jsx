@@ -11,11 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { CircleDot, RotateCw, CheckCircle, XCircle } from "lucide-react";
 
 const statusOptions = [
-  { value: "TODO", label: "To Do", icon: "⏳" },
-  { value: "IN_PROGRESS", label: "In Progress", icon: "🔄" },
-  { value: "DONE", label: "Completed", icon: "✅" },
+  { value: "TODO", label: "To Do", icon: CircleDot },
+  { value: "IN_PROGRESS", label: "In Progress", icon: RotateCw },
+  { value: "DONE", label: "Completed", icon: CheckCircle },
 ];
 
 export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
@@ -33,7 +34,7 @@ export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
         title: task.title || "",
         description: task.description || "",
         status: task.status || "TODO",
-        duedate: task.dueDate ? task.dueDate.split("T")[0] : "",
+        duedate: task.dueDate ? task.dueDate.split("T")[0] : "", // Fixed: use dueDate
         employeeId: task.employeeId || 0,
       });
     }
@@ -102,18 +103,21 @@ export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
             value={formData.status}
             onValueChange={(value) => handleChange("status", value)}
           >
-            <SelectTrigger className="w-full  h-11 border-border/50 focus:border-primary bg-background">
+            <SelectTrigger className="h-11 w-full border-border/50 focus:border-primary bg-background">
               <SelectValue placeholder="Select task status" />
             </SelectTrigger>
             <SelectContent>
-              {statusOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  <div className="flex items-center space-x-2">
-                    <span>{option.icon}</span>
-                    <span>{option.label}</span>
-                  </div>
-                </SelectItem>
-              ))}
+              {statusOptions.map((option) => {
+                const IconComponent = option.icon;
+                return (
+                  <SelectItem key={option.value} value={option.value}>
+                    <div className="flex items-center space-x-2">
+                      <IconComponent className="h-4 w-4" />
+                      <span>{option.label}</span>
+                    </div>
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
         </div>
