@@ -16,19 +16,21 @@ export default function LoginPage() {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
-      {/* Theme Toggle - Top Right */}
-      <div className="absolute top-4 right-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-primary/5 to-primary/10 blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-tr from-accent/5 to-muted/10 blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-gradient-to-r from-primary/3 to-secondary/3 blur-3xl"></div>
+      </div>
+
+      {/* Theme Toggle */}
+      <div className="absolute top-6 right-6 z-20">
         <ModeToggle />
       </div>
 
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold">Task Management</h1>
-          <p className="mt-2 text-muted-foreground">
-            Manage your tasks and employees efficiently
-          </p>
-        </div>
+      {/* Centered Login Form */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-6 py-12">
         <LoginForm />
       </div>
     </div>

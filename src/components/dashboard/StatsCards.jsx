@@ -88,7 +88,7 @@ export default function StatsCards({ employees = [], tasks = [] }) {
             key={index}
             className="group hover:shadow-lg hover:scale-105  transition-all duration-300 border-0 shadow-sm bg-gradient-to-br from-card to-card/80"
           >
-            <CardContent className="p-6">
+            <CardContent className="md:p-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div
