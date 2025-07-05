@@ -1,29 +1,31 @@
 // src/components/tasks/TaskList.jsx
 import { useGetTasksQuery } from "../../store/tasksApi";
+import { useGetEmployeesQuery } from "../../store/employeesApi";
 import TaskCard from "./TaskCard";
 import { Card, CardContent } from "../ui/card";
 import { CheckSquare, Search, Filter } from "lucide-react";
 
 export default function TaskList({ filter = "all", searchTerm = "" }) {
   const { data: tasks = [], isLoading, error } = useGetTasksQuery();
+  const { data: employees = [] } = useGetEmployeesQuery();
 
-  // Filter tasks based on both filter and search term
+  // Enhanced filtering with employee name search
   const filteredTasks = tasks.filter((task) => {
     // First apply status/assignment filter
     let passesFilter = true;
     if (filter === "assigned") passesFilter = task.employeeId > 0;
     else if (filter === "unassigned") passesFilter = task.employeeId === 0;
     else if (filter === "overdue") {
-      const dueDate = new Date(task.dueDate); // Fix: Use dueDate not duedate
+      const dueDate = new Date(task.dueDate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
+      const status = task.status?.toUpperCase();
       passesFilter =
         task.dueDate &&
         dueDate < today &&
-        task.status?.toUpperCase() !== "DONE" &&
-        task.status?.toUpperCase() !== "COMPLETED";
+        status !== "DONE" &&
+        status !== "COMPLETED";
     } else if (filter !== "all") {
-      // Handle both DONE and COMPLETED for completed filter
       if (filter.toUpperCase() === "COMPLETED") {
         passesFilter =
           task.status?.toUpperCase() === "DONE" ||
@@ -35,15 +37,21 @@ export default function TaskList({ filter = "all", searchTerm = "" }) {
 
     if (!passesFilter) return false;
 
-    // Then apply search term filter
+    // Then apply search term filter (now includes employee name)
     if (!searchTerm) return true;
 
     const search = searchTerm.toLowerCase();
+    const assignedEmployee = employees.find(
+      (emp) => emp.id === task.employeeId
+    );
+
     return (
       task.title?.toLowerCase().includes(search) ||
       task.description?.toLowerCase().includes(search) ||
       task.status?.toLowerCase().includes(search) ||
-      task.employee?.name?.toLowerCase().includes(search)
+      assignedEmployee?.name?.toLowerCase().includes(search) ||
+      assignedEmployee?.email?.toLowerCase().includes(search) ||
+      assignedEmployee?.position?.toLowerCase().includes(search)
     );
   });
 
@@ -143,9 +151,9 @@ export default function TaskList({ filter = "all", searchTerm = "" }) {
               </p>
               <p className="text-xs text-muted-foreground">
                 {searchTerm && filter !== "all"
-                  ? `Filtering by status and searching in title, description, and assignee`
+                  ? `Filtering by status and searching in title, description, and assignee details`
                   : searchTerm
-                  ? `Searching in title, description, status, and assignee`
+                  ? `Searching in title, description, status, and assignee details`
                   : `Filtered by ${filter} status`}
               </p>
             </div>

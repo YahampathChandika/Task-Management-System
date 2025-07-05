@@ -4,6 +4,7 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Calendar, User, ArrowRight, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useGetEmployeesQuery } from "../../store/employeesApi";
 
 const getStatusColor = (status) => {
   switch (status?.toUpperCase()) {
@@ -12,7 +13,7 @@ const getStatusColor = (status) => {
     case "IN_PROGRESS":
     case "INPROGRESS":
       return "bg-blue-100 text-blue-800 dark:bg-blue-800/50 dark:text-blue-300";
-    case "COMPLETED":
+    case "DONE":
       return "bg-green-100 text-green-800 dark:bg-green-800/50 dark:text-green-300";
     default:
       return "bg-slate-100 text-slate-800 dark:bg-slate-800/50 dark:text-slate-300";
@@ -30,6 +31,7 @@ const formatDate = (dateString) => {
 
 export default function RecentTasks({ tasks = [] }) {
   const navigate = useNavigate();
+  const { data: employees = [] } = useGetEmployeesQuery();
 
   const recentTasks = tasks.slice().reverse().slice(0, 5);
 
@@ -72,44 +74,65 @@ export default function RecentTasks({ tasks = [] }) {
           </div>
         ) : (
           <div className="space-y-3">
-            {recentTasks.map((task) => (
-              <div
-                key={task.id}
-                className="group p-4 rounded-lg border border-border/50 hover:border-border hover:bg-accent/30 transition-all duration-200 cursor-pointer"
-                onClick={() => navigate("/tasks")}
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0 space-y-2">
-                    <h4 className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
-                      {task.title}
-                    </h4>
-                    <div className="flex flex-wrap items-center gap-3 text-xs">
-                      <Badge
-                        className={getStatusColor(task.status)}
-                        variant="secondary"
-                      >
-                        {task.status || "TODO"}
-                      </Badge>
-                      {task.dueDate && (
-                        <div className="flex items-center text-muted-foreground">
-                          <Calendar className="mr-1 h-3 w-3" />
-                          {formatDate(task.dueDate)}
-                        </div>
-                      )}
-                      {task.employee && (
-                        <div className="flex items-center text-muted-foreground">
-                          <User className="mr-1 h-3 w-3" />
-                          <span className="truncate max-w-20">
-                            {task.employee.name}
-                          </span>
-                        </div>
-                      )}
+            {recentTasks.map((task) => {
+              // Find assigned employee
+              const assignedEmployee = employees.find(
+                (emp) => emp.id === task.employeeId
+              );
+
+              return (
+                <div
+                  key={task.id}
+                  className="group p-4 rounded-lg border border-border/50 hover:border-border hover:bg-accent/30 transition-all duration-200 cursor-pointer"
+                  onClick={() => navigate("/tasks")}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0 space-y-2">
+                      <h4 className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                        {task.title}
+                      </h4>
+                      <div className="flex flex-wrap items-center gap-3 text-xs">
+                        <Badge
+                          className={getStatusColor(task.status)}
+                          variant="secondary"
+                        >
+                          {task.status || "TODO"}
+                        </Badge>
+                        {task.dueDate && (
+                          <div className="flex items-center text-muted-foreground">
+                            <Calendar className="mr-1 h-3 w-3" />
+                            {formatDate(task.dueDate)}
+                          </div>
+                        )}
+                        {assignedEmployee ? (
+                          <div className="flex items-center text-muted-foreground">
+                            <User className="mr-1 h-3 w-3" />
+                            <span className="truncate max-w-20">
+                              {assignedEmployee.name}
+                            </span>
+                          </div>
+                        ) : task.employeeId > 0 ? (
+                          <div className="flex items-center text-muted-foreground">
+                            <User className="mr-1 h-3 w-3" />
+                            <span className="truncate max-w-20">
+                              Employee #{task.employeeId}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center text-muted-foreground">
+                            <User className="mr-1 h-3 w-3" />
+                            <span className="truncate max-w-20">
+                              Unassigned
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-0.5" />
                   </div>
-                  <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-0.5" />
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </CardContent>

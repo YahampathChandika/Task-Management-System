@@ -96,9 +96,9 @@ export default function Layout({ children }) {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
+          <div className="flex justify-between h-16 ">
             {/* Enhanced Logo Section */}
-            <div className="flex items-center">
+            <div className="flex items-center justify-between w-2/3">
               <div
                 className="flex items-center space-x-3 group cursor-pointer"
                 onClick={() => navigate("/")}
@@ -122,7 +122,7 @@ export default function Layout({ children }) {
               </div>
 
               {/* Enhanced Desktop Navigation */}
-              <div className="hidden md:ml-8 md:flex md:space-x-2">
+              <div className="hidden md:flex md:space-x-10">
                 {navigationItems.map((item) => {
                   const IconComponent = item.icon;
                   const isActive = isActiveRoute(item.path);
