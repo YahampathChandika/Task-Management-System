@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Plus, Search, Filter } from "lucide-react";
+import { Plus, Search, Filter, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -24,6 +24,17 @@ export default function TasksPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  const clearSearch = () => {
+    setSearchTerm("");
+  };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("all");
+  };
+
+  const hasActiveFilters = searchTerm || statusFilter !== "all";
 
   return (
     <div className="space-y-6">
@@ -47,12 +58,23 @@ export default function TasksPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
-            placeholder="Search tasks..."
+            placeholder="Search tasks by title, description, status, or assignee..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
+            className="pl-10 pr-10"
           />
+          {searchTerm && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearSearch}
+              className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
         </div>
+
         <div className="flex items-center space-x-2">
           <Filter className="h-4 w-4 text-gray-400" />
           <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -67,11 +89,22 @@ export default function TasksPage() {
               ))}
             </SelectContent>
           </Select>
+
+          {hasActiveFilters && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearFilters}
+              className="text-xs"
+            >
+              Clear All
+            </Button>
+          )}
         </div>
       </div>
 
       {/* Task List */}
-      <TaskList filter={statusFilter} />
+      <TaskList filter={statusFilter} searchTerm={searchTerm} />
 
       {/* Add Task Dialog */}
       <TaskFormDialog
@@ -81,3 +114,4 @@ export default function TasksPage() {
     </div>
   );
 }
+

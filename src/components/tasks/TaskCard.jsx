@@ -120,10 +120,10 @@ export default function TaskCard({ task }) {
             </span>
           </div>
 
-          {task.employee ? (
+          {task.employeeId != 0 ? (
             <div className="flex items-center space-x-2 text-sm text-gray-600">
               <User className="h-4 w-4" />
-              <span>{task.employee.name}</span>
+              <span>Assigner ID: {task.employeeId}</span>
             </div>
           ) : (
             <div className="flex items-center space-x-2 text-sm text-gray-400">

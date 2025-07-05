@@ -4,8 +4,21 @@ import EmployeeCard from "./EmployeeCard";
 import { Card, CardContent } from "../ui/card";
 import { Users } from "lucide-react";
 
-export default function EmployeeList() {
+export default function EmployeeList({ searchTerm = "" }) {
   const { data: employees = [], isLoading, error } = useGetEmployeesQuery();
+
+  // Filter employees based on search term
+  const filteredEmployees = employees.filter((employee) => {
+    if (!searchTerm) return true;
+
+    const search = searchTerm.toLowerCase();
+    return (
+      employee.name?.toLowerCase().includes(search) ||
+      employee.email?.toLowerCase().includes(search) ||
+      employee.position?.toLowerCase().includes(search) ||
+      employee.phone?.toLowerCase().includes(search)
+    );
+  });
 
   if (isLoading) {
     return (
@@ -37,16 +50,18 @@ export default function EmployeeList() {
     );
   }
 
-  if (employees.length === 0) {
+  if (filteredEmployees.length === 0) {
     return (
       <Card>
         <CardContent className="p-8 text-center">
           <Users className="mx-auto h-12 w-12 text-gray-400 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            No employees found
+            {searchTerm ? "No employees found" : "No employees found"}
           </h3>
           <p className="text-gray-500">
-            Get started by adding your first employee.
+            {searchTerm
+              ? `No employees match "${searchTerm}". Try a different search term.`
+              : "Get started by adding your first employee."}
           </p>
         </CardContent>
       </Card>
@@ -54,10 +69,22 @@ export default function EmployeeList() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {employees.map((employee) => (
-        <EmployeeCard key={employee.id} employee={employee} />
-      ))}
+    <div className="space-y-4">
+      {/* Search Results Info */}
+      {searchTerm && (
+        <div className="text-sm text-gray-600">
+          Found {filteredEmployees.length} employee
+          {filteredEmployees.length !== 1 ? "s" : ""}
+          {searchTerm && ` for "${searchTerm}"`}
+        </div>
+      )}
+
+      {/* Employee Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredEmployees.map((employee) => (
+          <EmployeeCard key={employee.id} employee={employee} />
+        ))}
+      </div>
     </div>
   );
 }

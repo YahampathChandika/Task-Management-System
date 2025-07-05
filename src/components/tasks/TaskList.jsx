@@ -4,21 +4,39 @@ import TaskCard from "./TaskCard";
 import { Card, CardContent } from "../ui/card";
 import { CheckSquare } from "lucide-react";
 
-export default function TaskList({ filter = "all" }) {
+export default function TaskList({ filter = "all", searchTerm = "" }) {
   const { data: tasks = [], isLoading, error } = useGetTasksQuery();
 
-  // Filter tasks based on the filter prop
+  // Filter tasks based on both filter and search term
   const filteredTasks = tasks.filter((task) => {
-    if (filter === "all") return true;
-    if (filter === "assigned") return task.employeeId > 0;
-    if (filter === "unassigned") return task.employeeId === 0;
-    if (filter === "overdue") {
+    // First apply status/assignment filter
+    let passesFilter = true;
+    if (filter === "assigned") passesFilter = task.employeeId > 0;
+    else if (filter === "unassigned") passesFilter = task.employeeId === 0;
+    else if (filter === "overdue") {
       const dueDate = new Date(task.duedate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      return task.duedate && dueDate < today;
+      passesFilter =
+        task.duedate &&
+        dueDate < today &&
+        task.status?.toUpperCase() !== "COMPLETED";
+    } else if (filter !== "all") {
+      passesFilter = task.status?.toUpperCase() === filter.toUpperCase();
     }
-    return task.status?.toUpperCase() === filter.toUpperCase();
+
+    if (!passesFilter) return false;
+
+    // Then apply search term filter
+    if (!searchTerm) return true;
+
+    const search = searchTerm.toLowerCase();
+    return (
+      task.title?.toLowerCase().includes(search) ||
+      task.description?.toLowerCase().includes(search) ||
+      task.status?.toLowerCase().includes(search) ||
+      task.employee?.name?.toLowerCase().includes(search)
+    );
   });
 
   if (isLoading) {
@@ -53,17 +71,21 @@ export default function TaskList({ filter = "all" }) {
   }
 
   if (filteredTasks.length === 0) {
+    const isSearchActive = searchTerm || filter !== "all";
+
     return (
       <Card>
         <CardContent className="p-8 text-center">
           <CheckSquare className="mx-auto h-12 w-12 text-gray-400 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            {filter === "all" ? "No tasks found" : `No ${filter} tasks found`}
+            {isSearchActive ? "No tasks found" : "No tasks found"}
           </h3>
           <p className="text-gray-500">
-            {filter === "all"
-              ? "Get started by creating your first task."
-              : "Try adjusting your filter or create new tasks."}
+            {isSearchActive
+              ? `No tasks match your current filters${
+                  searchTerm ? ` and search for "${searchTerm}"` : ""
+                }. Try adjusting your search or filters.`
+              : "Get started by creating your first task."}
           </p>
         </CardContent>
       </Card>
@@ -71,10 +93,23 @@ export default function TaskList({ filter = "all" }) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {filteredTasks.map((task) => (
-        <TaskCard key={task.id} task={task} />
-      ))}
+    <div className="space-y-4">
+      {/* Search/Filter Results Info */}
+      {(searchTerm || filter !== "all") && (
+        <div className="text-sm text-gray-600">
+          Found {filteredTasks.length} task
+          {filteredTasks.length !== 1 ? "s" : ""}
+          {filter !== "all" && ` in "${filter}"`}
+          {searchTerm && ` matching "${searchTerm}"`}
+        </div>
+      )}
+
+      {/* Task Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredTasks.map((task) => (
+          <TaskCard key={task.id} task={task} />
+        ))}
+      </div>
     </div>
   );
 }
