@@ -1,34 +1,3 @@
-// ===== 1. Updated Folder Structure =====
-/*
-src/
-├── components/
-│   ├── ui/                    # shadcn components
-│   │   ├── button.jsx
-│   │   ├── input.jsx
-│   │   ├── card.jsx
-│   │   ├── dialog.jsx
-│   │   ├── alert-dialog.jsx
-│   │   ├── badge.jsx
-│   │   └── index.js
-│   ├── employees/
-│   │   ├── EmployeeCard.jsx
-│   │   ├── EmployeeForm.jsx
-│   │   ├── EmployeeFormDialog.jsx
-│   │   ├── EmployeeList.jsx
-│   │   └── DeleteEmployeeDialog.jsx
-│   ├── Layout.jsx
-│   ├── ProtectedRoute.jsx
-│   └── LoginForm.jsx
-├── pages/
-│   ├── EmployeesPage.jsx
-│   └── ... other pages
-├── store/
-│   ├── employeesApi.js        # Employee API endpoints
-│   └── ... other store files
-└── ... other folders
-*/
-
-// ===== 2. Employees API Slice =====
 // src/store/employeesApi.js
 import { apiSlice } from "./apiSlice";
 

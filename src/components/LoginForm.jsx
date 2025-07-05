@@ -31,11 +31,7 @@ export default function LoginForm() {
       const result = await login({ username, password }).unwrap();
 
       if (result.error) {
-        toast({
-          title: "Login Failed",
-          description: "Invalid credentials",
-          variant: "destructive",
-        });
+        toast.error("Invalid credentials");
       } else {
         toast.success("Logged in successfully");
         navigate("/");
@@ -66,6 +62,7 @@ export default function LoginForm() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
+              className="w-full"
             />
           </div>
           <div className="space-y-2">
@@ -79,9 +76,15 @@ export default function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="w-full"
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading}
+            size="lg"
+          >
             {isLoading ? "Signing in..." : "Sign In"}
           </Button>
         </form>
