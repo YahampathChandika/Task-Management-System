@@ -13,9 +13,10 @@ import {
 } from "../ui/select";
 
 const statusOptions = [
-  { value: "TODO", label: "To Do" },
-  { value: "IN_PROGRESS", label: "In Progress" },
-  { value: "DONE", label: "Completed" },
+  { value: "TODO", label: "To Do", icon: "⏳" },
+  { value: "IN_PROGRESS", label: "In Progress", icon: "🔄" },
+  { value: "COMPLETED", label: "Completed", icon: "✅" },
+  { value: "BLOCKED", label: "Blocked", icon: "🚫" },
 ];
 
 export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
@@ -23,7 +24,7 @@ export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
     title: "",
     description: "",
     status: "TODO",
-    dueDate: "",
+    duedate: "",
     employeeId: 0,
   });
 
@@ -33,7 +34,7 @@ export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
         title: task.title || "",
         description: task.description || "",
         status: task.status || "TODO",
-        dueDate: task.dueDate ? task.dueDate.split("T")[0] : "",
+        duedate: task.duedate ? task.duedate.split("T")[0] : "",
         employeeId: task.employeeId || 0,
       });
     }
@@ -42,10 +43,9 @@ export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Format the date as ISO string if provided
     const submitData = {
       ...formData,
-      dueDate: formData.dueDate ? formData.dueDate : "",
+      duedate: formData.duedate ? formData.duedate : "",
     };
 
     onSubmit(submitData);
@@ -59,43 +59,60 @@ export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
+        <Label htmlFor="title" className="text-sm font-medium text-foreground">
+          Task Title
+        </Label>
         <Input
           id="title"
           value={formData.title}
           onChange={(e) => handleChange("title", e.target.value)}
-          placeholder="Enter task title"
+          placeholder="Enter a clear, descriptive task title"
           required
+          className="h-11 border-border/50 focus:border-primary bg-background"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
+        <Label
+          htmlFor="description"
+          className="text-sm font-medium text-foreground"
+        >
+          Description
+        </Label>
         <Textarea
           id="description"
           value={formData.description}
           onChange={(e) => handleChange("description", e.target.value)}
-          placeholder="Enter task description"
-          rows={3}
+          placeholder="Provide detailed information about the task requirements and expectations"
+          rows={4}
+          className="border-border/50 focus:border-primary bg-background resize-none"
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="status">Status</Label>
+          <Label
+            htmlFor="status"
+            className="text-sm font-medium text-foreground"
+          >
+            Status
+          </Label>
           <Select
             value={formData.status}
             onValueChange={(value) => handleChange("status", value)}
           >
-            <SelectTrigger>
-              <SelectValue placeholder="Select status" />
+            <SelectTrigger className="h-11 border-border/50 focus:border-primary bg-background">
+              <SelectValue placeholder="Select task status" />
             </SelectTrigger>
             <SelectContent>
               {statusOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
-                  {option.label}
+                  <div className="flex items-center space-x-2">
+                    <span>{option.icon}</span>
+                    <span>{option.label}</span>
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -103,19 +120,38 @@ export default function TaskForm({ task = null, onSubmit, isLoading = false }) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="dueDate">Due Date</Label>
+          <Label
+            htmlFor="duedate"
+            className="text-sm font-medium text-foreground"
+          >
+            Due Date
+          </Label>
           <Input
-            id="dueDate"
+            id="duedate"
             type="date"
-            value={formData.dueDate}
-            onChange={(e) => handleChange("dueDate", e.target.value)}
+            value={formData.duedate}
+            onChange={(e) => handleChange("duedate", e.target.value)}
+            className="h-11 border-border/50 focus:border-primary bg-background"
           />
         </div>
       </div>
 
-      <div className="flex justify-end space-x-2 pt-4">
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Saving..." : task ? "Update Task" : "Create Task"}
+      <div className="flex justify-end space-x-3 pt-6 border-t border-border/50">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="px-8 h-11 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200"
+        >
+          {isLoading ? (
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+              <span>Saving...</span>
+            </div>
+          ) : task ? (
+            "Update Task"
+          ) : (
+            "Create Task"
+          )}
         </Button>
       </div>
     </form>

@@ -1,5 +1,5 @@
 // src/components/dashboard/StatsCards.jsx
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import {
   Users,
   CheckSquare,
@@ -22,7 +22,6 @@ export default function StatsCards({ employees = [], tasks = [] }) {
   const completedTasks = tasksByStatus.COMPLETED || 0;
   const inProgressTasks =
     tasksByStatus.IN_PROGRESS || tasksByStatus.INPROGRESS || 0;
-  const todoTasks = tasksByStatus.TODO || 0;
 
   // Calculate overdue tasks
   const today = new Date();
@@ -42,48 +41,61 @@ export default function StatsCards({ employees = [], tasks = [] }) {
       title: "Total Employees",
       value: totalEmployees,
       icon: Users,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
+      gradient: "from-blue-500 to-blue-600",
+      bgGradient:
+        "from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20",
+      textColor: "text-blue-600 dark:text-blue-400",
     },
     {
       title: "Total Tasks",
       value: totalTasks,
       icon: CheckSquare,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
+      gradient: "from-purple-500 to-purple-600",
+      bgGradient:
+        "from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20",
+      textColor: "text-purple-600 dark:text-purple-400",
     },
     {
       title: "In Progress",
       value: inProgressTasks,
       icon: Clock,
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
+      gradient: "from-orange-500 to-orange-600",
+      bgGradient:
+        "from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20",
+      textColor: "text-orange-600 dark:text-orange-400",
     },
     {
       title: "Overdue Tasks",
       value: overdueTasks,
       icon: AlertTriangle,
-      color: "text-red-600",
-      bgColor: "bg-red-50",
-    },
+      gradient: "from-red-500 to-red-600",
+      bgGradient:
+        "from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/20",
+      textColor: "text-red-600 dark:text-red-400",
+    }
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
-          <Card key={index} className="hover:shadow-md transition-shadow">
+          <Card
+            key={index}
+            className="group hover:shadow-lg hover:scale-105  transition-all duration-300 border-0 shadow-sm bg-gradient-to-br from-card to-card/80"
+          >
             <CardContent className="p-6">
-              <div className="flex items-center space-x-4">
-                <div className={`p-3 rounded-full ${stat.bgColor}`}>
-                  <Icon className={`h-6 w-6 ${stat.color}`} />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div
+                    className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r ${stat.bgGradient} mb-4 group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <Icon className={`h-6 w-6 ${stat.textColor}`} />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground mb-1">
                     {stat.title}
                   </p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-3xl font-bold text-foreground transition-transform duration-300">
                     {stat.value}
                   </p>
                 </div>

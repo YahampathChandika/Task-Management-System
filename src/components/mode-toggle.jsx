@@ -1,5 +1,5 @@
 // src/components/mode-toggle.jsx
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Monitor } from "lucide-react";
 import { Button } from "./ui/button";
 import { useTheme } from "./theme-provider";
 
@@ -9,8 +9,44 @@ export function ModeToggle() {
   const toggleTheme = () => {
     if (theme === "light") {
       setTheme("dark");
+    } else if (theme === "dark") {
+      setTheme("system");
     } else {
       setTheme("light");
+    }
+  };
+
+  const getThemeIcon = () => {
+    switch (theme) {
+      case "light":
+        return (
+          <Sun className="h-[1.2rem] w-[1.2rem] transition-all duration-300" />
+        );
+      case "dark":
+        return (
+          <Moon className="h-[1.2rem] w-[1.2rem] transition-all duration-300" />
+        );
+      case "system":
+        return (
+          <Monitor className="h-[1.2rem] w-[1.2rem] transition-all duration-300" />
+        );
+      default:
+        return (
+          <Sun className="h-[1.2rem] w-[1.2rem] transition-all duration-300" />
+        );
+    }
+  };
+
+  const getThemeLabel = () => {
+    switch (theme) {
+      case "light":
+        return "Light mode";
+      case "dark":
+        return "Dark mode";
+      case "system":
+        return "System mode";
+      default:
+        return "Light mode";
     }
   };
 
@@ -19,11 +55,13 @@ export function ModeToggle() {
       variant="outline"
       size="icon"
       onClick={toggleTheme}
-      className="relative"
+      className="relative border-border/50 hover:border-primary/50 hover:bg-primary/10 transition-all duration-200 hover:scale-105 rounded-xl"
+      title={getThemeLabel()}
     >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      <span className="sr-only">Toggle theme</span>
+      <div className="relative transition-all duration-300">
+        {getThemeIcon()}
+      </div>
+      <span className="sr-only">{getThemeLabel()}</span>
     </Button>
   );
 }

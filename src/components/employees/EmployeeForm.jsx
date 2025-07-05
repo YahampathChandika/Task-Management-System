@@ -40,64 +40,88 @@ export default function EmployeeForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name" className="text-sm font-medium text-foreground">
+            Full Name
+          </Label>
           <Input
             id="name"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="Enter employee name"
+            placeholder="Enter full name"
             required
+            className="h-11 border-border/50 focus:border-primary bg-background"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="position">Position</Label>
+          <Label
+            htmlFor="position"
+            className="text-sm font-medium text-foreground"
+          >
+            Position
+          </Label>
           <Input
             id="position"
             name="position"
             value={formData.position}
             onChange={handleChange}
-            placeholder="Enter position"
+            placeholder="e.g., Frontend Developer"
             required
+            className="h-11 border-border/50 focus:border-primary bg-background"
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email" className="text-sm font-medium text-foreground">
+          Email Address
+        </Label>
         <Input
           id="email"
           name="email"
           type="email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="Enter email address"
+          placeholder="john@company.com"
           required
+          className="h-11 border-border/50 focus:border-primary bg-background"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="phone">Phone</Label>
+        <Label htmlFor="phone" className="text-sm font-medium text-foreground">
+          Phone Number
+        </Label>
         <Input
           id="phone"
           name="phone"
           value={formData.phone}
           onChange={handleChange}
-          placeholder="Enter phone number"
+          placeholder="+1 (555) 000-0000"
           required
+          className="h-11 border-border/50 focus:border-primary bg-background"
         />
       </div>
 
-      <div className="flex justify-end space-x-2 pt-4">
-        <Button type="submit" disabled={isLoading}>
-          {isLoading
-            ? "Saving..."
-            : employee
-            ? "Update Employee"
-            : "Create Employee"}
+      <div className="flex justify-end space-x-3 pt-6 border-t border-border/50">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="px-8 h-11 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200"
+        >
+          {isLoading ? (
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+              <span>Saving...</span>
+            </div>
+          ) : employee ? (
+            "Update Employee"
+          ) : (
+            "Create Employee"
+          )}
         </Button>
       </div>
     </form>

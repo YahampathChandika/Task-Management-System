@@ -12,6 +12,7 @@ import {
 } from "../ui/dialog";
 import EmployeeForm from "./EmployeeForm";
 import { toast } from "sonner";
+import { UserPlus, Edit } from "lucide-react";
 
 export default function EmployeeFormDialog({
   employee = null,
@@ -45,22 +46,41 @@ export default function EmployeeFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>
-            {isEditing ? "Edit Employee" : "Add New Employee"}
-          </DialogTitle>
-          <DialogDescription>
-            {isEditing
-              ? "Update the employee information below."
-              : "Fill in the details to create a new employee."}
-          </DialogDescription>
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background to-background/95 border-0 shadow-2xl">
+        <DialogHeader className="space-y-4 pb-6 border-b border-border/50">
+          <div className="flex items-center space-x-3">
+            <div
+              className={`p-3 rounded-xl bg-gradient-to-r ${
+                isEditing
+                  ? "from-blue-500 to-blue-600"
+                  : "from-green-500 to-green-600"
+              } text-white shadow-lg`}
+            >
+              {isEditing ? (
+                <Edit className="h-6 w-6" />
+              ) : (
+                <UserPlus className="h-6 w-6" />
+              )}
+            </div>
+            <div>
+              <DialogTitle className="text-xl font-semibold text-foreground">
+                {isEditing ? "Edit Employee" : "Add New Employee"}
+              </DialogTitle>
+              <DialogDescription className="text-muted-foreground">
+                {isEditing
+                  ? "Update the employee information below."
+                  : "Fill in the details to create a new team member."}
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
-        <EmployeeForm
-          employee={employee}
-          onSubmit={handleSubmit}
-          isLoading={isLoading}
-        />
+        <div className="pt-6">
+          <EmployeeForm
+            employee={employee}
+            onSubmit={handleSubmit}
+            isLoading={isLoading}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );
